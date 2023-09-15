@@ -1,0 +1,393 @@
+<Activity mc:Ignorable="sap sap2010" x:Class="Process" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:ae="clr-namespace:Auxis_Misc.Email;assembly=Auxis.Misc" xmlns:al="clr-namespace:Auxis_Misc.Log;assembly=Auxis.Misc" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib" xmlns:sd="clr-namespace:System.Data;assembly=System.Data" xmlns:ss="clr-namespace:System.Security;assembly=mscorlib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property sap2010:Annotation.AnnotationText="Transaction item to be processed." Name="in_TransactionItem" Type="InArgument(ui:QueueItem)" />
+    <x:Property sap2010:Annotation.AnnotationText="Dictionary structure to store configuration data of the process (settings, constants and assets)." Name="in_Config" Type="InArgument(scg:Dictionary(x:String, x:Object))" />
+    <x:Property Name="io_drTransactionItem" Type="InOutArgument(sd:DataRow)" />
+    <x:Property Name="io_dt_Jobs" Type="InOutArgument(sd:DataTable)" />
+    <x:Property Name="io_dt_Logs" Type="InOutArgument(sd:DataTable)" />
+    <x:Property Name="io_dt_Robots" Type="InOutArgument(sd:DataTable)" />
+    <x:Property Name="in_dt_Notifications" Type="InArgument(sd:DataTable)" />
+    <x:Property Name="in_StartDate" Type="InArgument(x:String)" />
+    <x:Property Name="in_EndDate" Type="InArgument(x:String)" />
+    <x:Property Name="io_dt_Processes" Type="InOutArgument(sd:DataTable)" />
+  </x:Members>
+  <mva:VisualBasic.Settings>
+    <x:Null />
+  </mva:VisualBasic.Settings>
+  <sap:VirtualizedContainerService.HintSize>1244,3866</sap:VirtualizedContainerService.HintSize>
+  <sap2010:WorkflowViewState.IdRef>ProcessTransaction_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <scg:List x:TypeArguments="x:String" Capacity="62">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>System.Runtime.Serialization</x:String>
+      <x:String>Auxis_Misc.Log</x:String>
+      <x:String>System.Reflection</x:String>
+      <x:String>System.Runtime.InteropServices</x:String>
+      <x:String>System.Activities.DynamicUpdate</x:String>
+      <x:String>System.ComponentModel</x:String>
+      <x:String>System.Xml.Serialization</x:String>
+      <x:String>System.Collections.ObjectModel</x:String>
+      <x:String>Auxis_Misc.Email</x:String>
+      <x:String>System.Security</x:String>
+      <x:String>UiPath.Web</x:String>
+      <x:String>UiPath.Platform.ResourceHandling</x:String>
+      <x:String>UiPath.Web.Activities</x:String>
+    </scg:List>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <scg:List x:TypeArguments="AssemblyReference" Capacity="62">
+      <AssemblyReference>Auxis.Misc</AssemblyReference>
+      <AssemblyReference>Auxis.Misc_Expressions_18969755</AssemblyReference>
+      <AssemblyReference>Auxis.Misc_Expressions_25403642</AssemblyReference>
+      <AssemblyReference>Auxis.Misc_Expressions_56574314</AssemblyReference>
+      <AssemblyReference>Auxis.Misc_Expressions_63592346</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualStudio.Services.Common</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.TypeConverter</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Linq</AssemblyReference>
+      <AssemblyReference>System.ObjectModel</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ValueTuple</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>UiPath.CV</AssemblyReference>
+      <AssemblyReference>UiPath.Excel</AssemblyReference>
+      <AssemblyReference>UiPath.Mail</AssemblyReference>
+      <AssemblyReference>UiPath.Studio.Constants</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>System.Memory</AssemblyReference>
+      <AssemblyReference>Microsoft.Bcl.AsyncInterfaces</AssemblyReference>
+      <AssemblyReference>System.Data.Entity</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities.Design</AssemblyReference>
+      <AssemblyReference>UiPath.Web</AssemblyReference>
+      <AssemblyReference>UiPath.Platform</AssemblyReference>
+      <AssemblyReference>UiPath.Web.Activities</AssemblyReference>
+      <AssemblyReference>System.Runtime.WindowsRuntime</AssemblyReference>
+    </scg:List>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence sap2010:Annotation.AnnotationText="Invoke major steps of the business process, which are usually implemented by multiple subworkflows.&#xA;&#xA;If a BusinessRuleException is thrown, the transaction is skipped. &#xA;If another kind of exception occurs, the current transaction can be retried. &#xA;&#xA;in_TransactionItem: Use this argument when using orchestrator.&#xA;&#xA;io_dr_TranactionItem: Wll contain the transaction item when not using orchestrator." DisplayName="Process" sap:VirtualizedContainerService.HintSize="546,3801" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="scg:Dictionary(x:String, x:Object)" Default="[New Dictionary(Of String, Object)]" Name="ProcessDictionary" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_Folders" />
+      <Variable x:TypeArguments="x:String" Name="Token" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_Triggers" />
+      <Variable x:TypeArguments="x:String" Name="FinalReportFile" />
+      <Variable x:TypeArguments="ss:SecureString" Name="Password" />
+      <Variable x:TypeArguments="x:String" Name="Username" />
+      <Variable x:TypeArguments="x:String" Name="FinalPassword" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dt_Queues" />
+    </Sequence.Variables>
+    <sap:WorkflowViewStateService.ViewState>
+      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+        <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+      </scg:Dictionary>
+    </sap:WorkflowViewStateService.ViewState>
+    <ui:InvokeCode ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="Build dictionary of all arguments required to exceute the process. an empty dictionary entry can be created and then modified when required. " Code=" 'Example:&#xA; 'io_ProcessDictionary.Add(&quot;Key&quot;,&quot;Value&quot;)" DisplayName="Invoke code Create ProcessDictionary" sap:VirtualizedContainerService.HintSize="484,222" sap2010:WorkflowViewState.IdRef="InvokeCode_1">
+      <ui:InvokeCode.Arguments>
+        <InOutArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)" x:Key="io_ProcessDictionary">[ProcessDictionary]</InOutArgument>
+      </ui:InvokeCode.Arguments>
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+    </ui:InvokeCode>
+    <al:Write_To_Log DisplayName="Write To Log - Started" sap:VirtualizedContainerService.HintSize="484,80" sap2010:WorkflowViewState.IdRef="Write_To_Log_1" Message="[&quot;Processing Transaction: &quot; + io_drTransactionItem(&quot;Client&quot;).ToString + &quot; with tenant &quot; + io_drTransactionItem(&quot;Tenant&quot;).ToString]" />
+    <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="Invoke Misc_Move_Backups workflow" sap:VirtualizedContainerService.HintSize="484,113" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_12" UnSafe="False" WorkflowFileName="Misc\Misc_Move_Backups.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="in_FromFolder">Results</InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:GetRobotCredential TimeoutMS="{x:Null}" AssetName="[io_drTransactionItem(&quot;KeysAsset&quot;).ToString]" CacheStrategy="None" DisplayName="Get Credential - Keys" sap:VirtualizedContainerService.HintSize="484,181" sap2010:WorkflowViewState.IdRef="GetRobotCredential_1" Password="[Password]" Username="[Username]" />
+    <Assign DisplayName="Assign - Transform Password" sap:VirtualizedContainerService.HintSize="484,82" sap2010:WorkflowViewState.IdRef="Assign_2">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[FinalPassword]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">[new System.Net.NetworkCredential(string.Empty, Password).Password]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="Invoke Get_Token workflow" sap:VirtualizedContainerService.HintSize="484,113" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_13" UnSafe="False" WorkflowFileName="APIs\Get_Token.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="in_ClientID">[username]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_UserKey">[FinalPassword]</InArgument>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_Token">[Token]</OutArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_API">https://account.uipath.com/oauth/token</InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="Invoke Get_Folders workflow" sap:VirtualizedContainerService.HintSize="484,113" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_8" UnSafe="False" WorkflowFileName="APIs\Get_Folders.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_Folders">[dt_Folders]</OutArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Client">[io_drTransactionItem("Client").ToString]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_API">https://cloud.uipath.com/{0}/{1}/orchestrator_/odata/Folders?%24count=true</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Organization">[io_drTransactionItem("Organization").ToString]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Tenant">[io_drTransactionItem("Tenant").ToString]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Token">[Token]</InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="APIs\Get_Assets.xaml - Invoke Workflow File" sap:VirtualizedContainerService.HintSize="484,113" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_16" UnSafe="False" WorkflowFileName="APIs\Get_Assets.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="in_API">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="in_Config(&quot;AssetsAPI&quot;).ToString" />
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Token">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="Token" />
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Organization">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="io_drTransactionItem(&quot;Organization&quot;).ToString" />
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Tenant">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="io_drTransactionItem(&quot;Tenant&quot;).ToString" />
+        </InArgument>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_Folders">
+          <mva:VisualBasicValue x:TypeArguments="sd:DataTable" ExpressionText="dt_Folders" />
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_ReportName">
+          <Literal x:TypeArguments="x:String">Assets</Literal>
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Client">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="io_drTransactionItem(&quot;Client&quot;).ToString" />
+        </InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="Invoke Get_Jobs workflow" sap:VirtualizedContainerService.HintSize="484,113" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="APIs\Get_Jobs.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_JobsInfo">[io_dt_Jobs]</OutArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_API">[in_Config("JobsAPI").ToString]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_ReportName">Jobs</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Client">[io_drTransactionItem("Client").ToString]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_StartDate">[in_StartDate]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_EndDate">[in_EndDate]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Organization">[io_drTransactionItem("Organization").ToString]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Tenant">[io_drTransactionItem("Tenant").ToString]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Token">[Token]</InArgument>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_Folders">[dt_Folders]</InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="Invoke Get_JobLogs workflow" sap:VirtualizedContainerService.HintSize="484,113" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_2" UnSafe="False" WorkflowFileName="APIs\Get_JobLogs.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="in_API">[in_Config("LogsAPI").ToString]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_ReportName">Logs</InArgument>
+        <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_JobLogs">[io_dt_Logs]</OutArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Client">[io_drTransactionItem("Client").ToString]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_StartDate">[in_StartDate]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_EndDate">[in_EndDate]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Tenant">[io_drTransactionItem("Tenant").ToString]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Organization">[io_drTransactionItem("Organization").ToString]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Token">[Token]</InArgument>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_Folders">[dt_Folders]</InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="Invoke Get_JobTriggers workflow" sap:VirtualizedContainerService.HintSize="484,113" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_3" UnSafe="False" WorkflowFileName="APIs\Get_JobTriggers.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="in_ReportName">Triggers</InArgument>
+        <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_JobTriggers">[dt_Triggers]</OutArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_API">[in_Config("TriggersAPI").ToString]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Client">[io_drTransactionItem("Client").ToString]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Tenant">[io_drTransactionItem("Tenant").ToString]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Organization">[io_drTransactionItem("Organization").ToString]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Token">[Token]</InArgument>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_Folders">[dt_Folders]</InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="Invoke Get_Processes workflow" sap:VirtualizedContainerService.HintSize="484,113" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_4" UnSafe="False" WorkflowFileName="APIs\Get_Processes.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_Processes">[io_dt_Processes]</OutArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_ReportName">Processes</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_API">[in_Config("ProcessAPI").ToString]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Client">[io_drTransactionItem("Client").ToString]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Tenant">[io_drTransactionItem("Tenant").ToString]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Organization">[io_drTransactionItem("Organization").ToString]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Token">[Token]</InArgument>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_Folders">[dt_Folders]</InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="Invoke Get_Robots workflow" sap:VirtualizedContainerService.HintSize="484,113" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_6" UnSafe="False" WorkflowFileName="APIs\Get_Robots.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_Robots">
+          <mva:VisualBasicReference x:TypeArguments="sd:DataTable" ExpressionText="io_dt_Robots" />
+        </OutArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_ReportName">
+          <Literal x:TypeArguments="x:String">Robots</Literal>
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_API">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="in_Config(&quot;RobotsAPI&quot;).ToString" />
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Client">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="io_drTransactionItem(&quot;Client&quot;).ToString" />
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Tenant">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="io_drTransactionItem(&quot;Tenant&quot;).ToString" />
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Organization">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="io_drTransactionItem(&quot;Organization&quot;).ToString" />
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Token">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="Token" />
+        </InArgument>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_Folders">
+          <mva:VisualBasicValue x:TypeArguments="sd:DataTable" ExpressionText="dt_Folders" />
+        </InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="Invoke Get_Queues workflow" sap:VirtualizedContainerService.HintSize="484,113" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_14" UnSafe="False" WorkflowFileName="APIs\Get_Queues.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="in_ReportName">
+          <Literal x:TypeArguments="x:String">Queues</Literal>
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_API">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="in_Config(&quot;QueuesAPI&quot;).ToString" />
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Client">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="io_drTransactionItem(&quot;Client&quot;).ToString" />
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Tenant">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="io_drTransactionItem(&quot;Tenant&quot;).ToString" />
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Organization">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="io_drTransactionItem(&quot;Organization&quot;).ToString" />
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Token">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="Token" />
+        </InArgument>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_Folders">
+          <mva:VisualBasicValue x:TypeArguments="sd:DataTable" ExpressionText="dt_Folders" />
+        </InArgument>
+        <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_Queues">
+          <mva:VisualBasicReference x:TypeArguments="sd:DataTable" ExpressionText="dt_Queues" />
+        </OutArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="APIs\Get_QueuesDetails.xaml - Invoke Workflow File" sap:VirtualizedContainerService.HintSize="484,113" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_17" UnSafe="False" WorkflowFileName="APIs\Get_QueuesDetails.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_Queues">
+          <mva:VisualBasicValue x:TypeArguments="sd:DataTable" ExpressionText="dt_Queues" />
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_API">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="in_Config(&quot;APIQueueDetails&quot;).ToString" />
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Token">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="Token" />
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_ReportName">
+          <Literal x:TypeArguments="x:String">QueuesDetails</Literal>
+        </InArgument>
+        <InArgument x:TypeArguments="x:Int32" x:Key="in_DaysNo">
+          <mva:VisualBasicValue x:TypeArguments="x:Int32" ExpressionText="CInt(in_Config(&quot;DaysNumberQueuesDetails&quot;).ToString)" />
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Organization">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="io_drTransactionItem(&quot;Organization&quot;).ToString" />
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Tenant">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="io_drTransactionItem(&quot;Tenant&quot;).ToString" />
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Client">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="io_drTransactionItem(&quot;Client&quot;).ToString" />
+        </InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="APIs\Get_Users.xaml - Invoke Workflow File" sap:VirtualizedContainerService.HintSize="484,113" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_15" UnSafe="False" WorkflowFileName="APIs\Get_Users.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="in_ReportName">
+          <Literal x:TypeArguments="x:String">Users</Literal>
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_API">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="in_Config(&quot;UsersAPI&quot;).ToString" />
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Client">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="io_drTransactionItem(&quot;Client&quot;).ToString" />
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Tenant">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="io_drTransactionItem(&quot;Tenant&quot;).ToString" />
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Organization">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="io_drTransactionItem(&quot;Organization&quot;).ToString" />
+        </InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_Token">
+          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="Token" />
+        </InArgument>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_Folders">
+          <mva:VisualBasicValue x:TypeArguments="sd:DataTable" ExpressionText="dt_Folders" />
+        </InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <If Condition="[io_dt_Jobs.rows.Count &gt; 0 AND io_dt_Logs.rows.Count &gt; 0]" DisplayName="If - Build DB Summary" sap:VirtualizedContainerService.HintSize="484,302" sap2010:WorkflowViewState.IdRef="If_2">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <If.Then>
+        <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="Invoke Misc_DBSummary workflow" sap:VirtualizedContainerService.HintSize="334,113" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_7" UnSafe="False" WorkflowFileName="Misc\Misc_DBSummary.xaml">
+          <ui:InvokeWorkflowFile.Arguments>
+            <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_Jobs">[io_dt_Jobs]</InArgument>
+            <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_Logs">[io_dt_Logs]</InArgument>
+            <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_Robots">[io_dt_Robots]</InArgument>
+            <OutArgument x:TypeArguments="sd:DataTable" x:Key="out_dt_FinalData" />
+            <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dt_Notifications">[in_dt_Notifications]</InArgument>
+            <InArgument x:TypeArguments="x:String" x:Key="in_Client">[io_drTransactionItem("Client").ToString]</InArgument>
+            <InArgument x:TypeArguments="x:String" x:Key="in_StartDate">[in_StartDate]</InArgument>
+            <InArgument x:TypeArguments="x:String" x:Key="in_EndDate">[in_EndDate]</InArgument>
+            <InArgument x:TypeArguments="x:String" x:Key="in_ReportName">DBSummary</InArgument>
+          </ui:InvokeWorkflowFile.Arguments>
+        </ui:InvokeWorkflowFile>
+      </If.Then>
+    </If>
+    <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="Invoke Misc_Consolidate workflow" sap:VirtualizedContainerService.HintSize="484,113" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_9" UnSafe="False" WorkflowFileName="Misc\Misc_Consolidate.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <OutArgument x:TypeArguments="x:String" x:Key="out_FinalPath">
+          <mva:VisualBasicReference x:TypeArguments="x:String" ExpressionText="FinalReportFile" />
+        </OutArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ae:Send_Notification AttachmentFolders="{x:Null}" BodyValues="{x:Null}" CCAddress="{x:Null}" OutlookAccount="{x:Null}" OutlookOnBehalfOf="{x:Null}" ToAddress="{x:Null}" Attachments="[{FinalReportFile}]" DisplayName="Send Notification Consolidated" sap:VirtualizedContainerService.HintSize="484,133" sap2010:WorkflowViewState.IdRef="Send_Notification_1" NotificationID="ConsolidatedReport" NotificationsDt="[in_dt_Notifications]" SubjectValues="[{io_drTransactionItem(&quot;Client&quot;).ToString, Datetime.now.ToString(&quot;MM-dd-yy&quot;)}]" />
+    <Delay DisplayName="Delay - Wait email to be sent" Duration="00:00:03" sap:VirtualizedContainerService.HintSize="484,25" sap2010:WorkflowViewState.IdRef="Delay_1" />
+    <If Condition="[NOT (io_dt_Jobs.rows.Count &gt; 0 AND io_dt_Logs.rows.Count &gt; 0)]" DisplayName="If - Build DB Summary - Exception" sap:VirtualizedContainerService.HintSize="484,249" sap2010:WorkflowViewState.IdRef="If_3">
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+      <If.Then>
+        <Throw DisplayName="Throw- Unable to build Summary" Exception="[new BusinessRuleException(&quot;Unable to build Execution Summary as one of the needed tables were not extracted&quot;)]" sap:VirtualizedContainerService.HintSize="200,25" sap2010:WorkflowViewState.IdRef="Throw_3" />
+      </If.Then>
+    </If>
+  </Sequence>
+</Activity>
